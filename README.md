@@ -36,103 +36,17 @@ A template for creating consistent help content:
 
 ### Setting Up a New Application
 
-1. **Copy the template files** to your new application directory
+1. **Fork the repository**
 2. **Customize the HTML template** by replacing placeholders:
    - `<!-- APP_TITLE -->` - Your application title
    - `<!-- APP_NAME -->` - Your application name (appears in header)
    - `<!-- APP_SPECIFIC_HEADER_CONTENT -->` - Any additional header elements
-   - `<!-- APP_SPECIFIC_SIDEBAR -->` - Your sidebar content
    - `<!-- APP_SPECIFIC_MAIN_CONTENT -->` - Your main content area
    - `<!-- APP_SPECIFIC_CSS -->` - Links to your app-specific CSS files
    - `<!-- APP_SPECIFIC_SCRIPTS -->` - Links to your app-specific JavaScript files
 
-3. **Create your help content** using the help content template
-4. **Initialize the auto-save system** in your JavaScript:
-
-```javascript
-// Your application data
-let appData = {
-  // Your data structure here
-};
-
-// Initialize auto-save
-const autoSave = AutoSave.init({
-  data: appData,
-  filename: 'solution.json',
-  localStorageKey: 'myapp:data',
-  saveInterval: 1000,
-  onStatusChange: setStatus,
-  onDataChange: (data) => {
-    // Optional: Custom logic when data changes
-  },
-  onError: (message, error) => {
-    console.error('Auto-save error:', message, error);
-  }
-});
-
-// Load existing data
-const savedData = autoSave.loadFromLocalStorage();
-if (savedData) {
-  appData = savedData;
-}
-```
-
-5. **Initialize the help modal** in your JavaScript:
-
-```javascript
-// Load your help content (from file, API, or inline)
-const helpContent = `<!-- Your help content here -->`;
-
-// Initialize the help modal
-HelpModal.init({
-  triggerSelector: '#btn-help',
-  content: helpContent,
-  theme: 'auto' // or 'light' or 'dark'
-});
-```
-
-### Example Implementation
-
-```html
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>My App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="./bespoke.css" />
-  <link rel="stylesheet" href="./my-app.css" />
-</head>
-<body class="bespoke">
-  <header class="header">
-    <h1>My App</h1>
-    <button id="btn-save">Save</button>
-    <div class="spacer"></div>
-    <div id="status" class="status">Ready</div>
-    <button id="btn-help" class="as-button ghost">Help</button>
-  </header>
-
-  <main class="main-layout">
-    <aside class="sidebar">
-      <!-- Your app controls go here -->
-    </aside>
-    <div class="content-area">
-      <!-- Your main app content goes here -->
-    </div>
-  </main>
-
-  <script src="./help-modal.js"></script>
-  <script src="./my-app.js"></script>
-  <script>
-    HelpModal.init({
-      triggerSelector: '#btn-help',
-      content: myHelpContent,
-      theme: 'auto'
-    });
-  </script>
-</body>
-</html>
-```
+3. **Implement your application logic**. You can use Cursor or other agents for it. There is a file called `context.txt` that contains context LLM can use.
+4. **Customise your help content** using the help content template
 
 ### Customizing Help Content
 
