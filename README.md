@@ -4,28 +4,28 @@ This directory contains reusable components for creating embedded applications t
 
 ## Components
 
-### 1. `bespoke.css`
+### 1. `client/bespoke.css`
 The core CSS framework providing:
 - Consistent design tokens (colors, spacing, typography)
 - Light and dark theme support
 - Reusable component styles (buttons, forms, modals, cards)
 - Responsive design utilities
 
-### 2. `index.html`
+### 2. `client/index.html`
 A base HTML template that includes:
 - Navigation header with app name and help button
 - Main layout structure (sidebar + content area)
 - Help modal integration
 - Proper CSS and JavaScript loading
 
-### 3. `help-modal.js`
+### 3. `client/help-modal.js`
 A dependency-free JavaScript module for the help modal system:
 - Consistent modal behavior across all apps
 - Keyboard navigation (ESC to close)
 - Focus management
 - Custom event system
 
-### 4. `help-content-template.html`
+### 4. `client/help-content-template.html`
 A template for creating consistent help content:
 - Table of contents navigation
 - Standardized section structure
@@ -45,7 +45,7 @@ A template for creating consistent help content:
    - `<!-- APP_SPECIFIC_CSS -->` - Links to your app-specific CSS files
    - `<!-- APP_SPECIFIC_SCRIPTS -->` - Links to your app-specific JavaScript files
 
-3. **Implement your application logic**. You can use Cursor or other agents for it. There is a file called `context.txt` that contains context LLM can use.
+3. **Implement your application logic**. You can use Cursor or other agents for it. There is a file called `AGENTS.md` that contains context LLM can use.
 4. **Customise your help content** using the help content template
 
 ### Customizing Help Content
@@ -115,7 +115,7 @@ The server will start on `http://localhost:3000` by default.
 
 ### WebSocket Messaging API
 
-The server provides a `POST /message` endpoint that allows you to send real-time messages to connected clients. This can be used to signal changes in the client during events like "Run" or "Submit". When a message is sent, the preview window with the application open will display an alert with the message. 
+The server provides a `POST /message` endpoint that allows you to send real-time messages to connected clients. This can be used to signal changes in the client during events like "Run" or "Submit". When a message is sent, the preview window with the application open will display an alert with the message.
 
 It uses the `ws` package, so if you want to use it, install the packages (but this is optional).
 
@@ -137,15 +137,4 @@ npm install
 curl -X POST http://localhost:3000/message \
   -H "Content-Type: application/json" \
   -d '{"message": "Hello from the server!"}'
-```
-
-## File Structure
-
-```
-generalised/
-├── bespoke.css              # Core CSS framework
-├── index.html               # Base HTML template
-├── help-modal.js           # Help modal JavaScript
-├── help-content-template.html # Help content template
-└── README.md               # This file
 ```
