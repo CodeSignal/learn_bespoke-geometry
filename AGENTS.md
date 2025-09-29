@@ -1,7 +1,103 @@
+# BESPOKE GENERALIZED COMPONENTS - IMPLEMENTATION CONTEXT
+
+This document provides precise implementation instructions for creating embedded applications using the Bespoke generalized components. Follow these instructions exactly to ensure consistency across all applications.
+
+## REQUIRED FILES STRUCTURE
+
+Every application MUST include these files in the following order:
+
+1. bespoke.css (core styling framework)
+2. help-modal.js (help system)
+3. app.js (application logic)
+4. server.js (server)
+
+## HTML TEMPLATE IMPLEMENTATION
+
+1. REPLACE the following placeholders in index.html EXACTLY as specified:
+
+   a) `<!-- APP_TITLE -->`
+      Replace with your application's page title
+      Example: "Database Designer" or "Task Manager"
+
+   b) `<!-- APP_NAME -->`
+      Replace with your application's display name (appears in header)
+      Example: "Database Designer" or "Task Manager"
+
+   c) `<!-- APP_SPECIFIC_MAIN_CONTENT -->`
+      Add your application's main content area
+      Example: `<div id="canvas"></div>` or `<div id="editor"></div>`
+
+   d) `<!-- APP_SPECIFIC_CSS -->`
+      Add links to your application-specific CSS files
+      Example: `<link rel="stylesheet" href="./my-app.css" />`
+
+   e) `<!-- APP_SPECIFIC_SCRIPTS -->`
+      Add links to your application-specific JavaScript files
+      Example: `<script src="./my-app-logic.js"></script>`
+
+3. DO NOT modify the core structure (header, script loading order, etc.)
+
+## CSS IMPLEMENTATION
+
+1. ALWAYS use the `.bespoke` class on the body element
+2. USE ONLY the provided CSS custom properties for styling:
+   - Colors: `--bespoke-bg`, `--bespoke-fg`, `--bespoke-accent`, etc.
+   - Spacing: `--bespoke-space-xs` through `--bespoke-space-2xl`
+   - Typography: `--bespoke-font-size-*`, `--bespoke-font-weight-*`
+   - Borders: `--bespoke-radius-*`, `--bespoke-stroke`
+   - Shadows: `--bespoke-shadow-*`
+
+3. FOR custom styling, create app-specific CSS files
+4. OVERRIDE variables in your app-specific CSS, not in bespoke.css
+5. FOLLOW the existing naming conventions for consistency
+
+## JAVASCRIPT IMPLEMENTATION
+
+1. HELP MODAL SETUP:
+   a) Create help content using help-content-template.html as reference
+   b) Initialize HelpModal with:
+      - triggerSelector: `'#btn-help'`
+      - content: your help content (string or loaded from file)
+      - theme: `'auto'`
+
+2. STATUS MANAGEMENT:
+   a) Use the provided setStatus() function for status updates
+   b) Update status for: loading, saving, errors, user actions
+   c) Keep status messages concise and informative
+
+## ERROR HANDLING REQUIREMENTS
+
+1. WRAP all async operations in try-catch blocks
+2. PROVIDE meaningful error messages to users
+3. LOG errors to console for debugging
+4. IMPLEMENT retry logic for network operations
+5. HANDLE localStorage quota exceeded errors
+6. VALIDATE data before saving operations
+
+## STATUS MESSAGE CONVENTIONS
+
+Use these EXACT status messages for consistency:
+
+- "Ready" - Application loaded successfully
+- "Loading..." - Data is being loaded
+- "Saving..." - Data is being saved
+- "Changes saved" - Auto-save completed successfully
+- "Save failed (will retry)" - Server save failed, will retry
+- "Failed to load data" - Data loading failed
+- "Auto-save initialized" - Auto-save system started
+
+## FILE NAMING CONVENTIONS
+
+1. CSS files: kebab-case (e.g., my-app.css, task-manager.css)
+2. JavaScript files: kebab-case (e.g., my-app.js, task-manager.js)
+3. Data files: kebab-case (e.g., solution.json, initial-data.json)
+4. Image files: kebab-case (e.g., overview.png, help-icon.svg)
+
+---
+
 # BESPOKE CSS SELECTOR GUIDELINES
-# Version: 1.0.0
-#
-# This document explains how to use the Bespoke CSS framework for embedded applications.
+
+This section explains how to use the Bespoke CSS framework for embedded applications.
 
 ## OVERVIEW
 The Bespoke CSS framework provides a scoped, reusable set of components that can be embedded in any website without conflicts. All styles are scoped under the `.bespoke` class to prevent interference with parent site styles.
@@ -112,7 +208,7 @@ The Bespoke CSS framework provides a scoped, reusable set of components that can
 <!-- Checkbox -->
 <input type="checkbox" />
 
-<!-- Radio buttons (NON TESTED) -->
+<!-- Radio buttons -->
 <div class="radio-group">
   <label class="row">
     <input type="radio" name="option" value="a" />
@@ -124,7 +220,7 @@ The Bespoke CSS framework provides a scoped, reusable set of components that can
   </label>
 </div>
 
-<!-- Horizontal radio group (NON TESTED) -->
+<!-- Horizontal radio group -->
 <div class="radio-group horizontal">
   <label class="row">
     <input type="radio" name="size" value="small" />
@@ -136,10 +232,10 @@ The Bespoke CSS framework provides a scoped, reusable set of components that can
   </label>
 </div>
 
-<!-- Textarea (NON TESTED) -->
+<!-- Textarea -->
 <textarea placeholder="Enter your message here..."></textarea>
 
-<!-- Toggle switch (NON TESTED) -->
+<!-- Toggle switch -->
 <label class="row">
   <div class="toggle">
     <input type="checkbox" class="toggle-input" />
@@ -161,35 +257,6 @@ The Bespoke CSS framework provides a scoped, reusable set of components that can
 
 <!-- Button as link -->
 <a href="#" class="as-button">Link Button</a>
-```
-
-### UTILITY COMPONENTS
-
-#### Flexbox Utilities
-```html
-<!-- Horizontal row -->
-<div class="row">
-  <span>Item 1</span>
-  <span>Item 2</span>
-</div>
-
-<!-- Space between items -->
-<div class="row-between">
-  <span>Left</span>
-  <span>Right</span>
-</div>
-
-<!-- Spacer -->
-<div class="row">
-  <span>Left</span>
-  <div class="spacer"></div>
-  <span>Right</span>
-</div>
-```
-
-#### Dividers
-```html
-<hr />
 ```
 
 ### MODAL COMPONENTS
@@ -269,32 +336,6 @@ You can override any CSS custom property to customize the appearance:
 ### Automatic Dark Mode
 The framework automatically detects the user's system preference and switches between light and dark themes. No additional configuration is needed.
 
-### Manual Theme Override
-You can force a specific theme by overriding the CSS custom properties:
-
-```css
-/* Force light theme */
-.bespoke {
-  --bespoke-bg: #ffffff;
-  --bespoke-fg: #000000;
-  /* ... other light theme variables */
-}
-
-/* Force dark theme */
-.bespoke {
-  --bespoke-bg: #1a1a1a;
-  --bespoke-fg: #ffffff;
-  /* ... other dark theme variables */
-}
-```
-
-## RESPONSIVE DESIGN
-
-The framework includes responsive breakpoints:
-
-- **Mobile (≤768px)**: Sidebar becomes full-width above content
-- **Tablet/Desktop (>768px)**: Sidebar and content side-by-side
-
 ## INTEGRATION EXAMPLES
 
 ### Database Designer
@@ -326,109 +367,9 @@ The framework includes responsive breakpoints:
   </main>
 </div>
 ```
-
-### Quiz Application
-```html
-<div class="bespoke">
-  <header class="header">
-    <h1>Quiz App</h1>
-    <div class="status">Question 1 of 10</div>
-  </header>
-
-  <main class="main-layout">
-    <div class="content-area">
-      <section class="card">
-        <h2>What is the capital of France?</h2>
-        <form>
-          <label class="row">
-            <input type="radio" name="answer" value="a" />
-            Paris
-          </label>
-          <label class="row">
-            <input type="radio" name="answer" value="b" />
-            London
-          </label>
-          <button type="submit" class="primary">Submit Answer</button>
-        </form>
-      </section>
-    </div>
-  </main>
-</div>
-```
-
-### Form Builder
-```html
-<div class="bespoke">
-  <header class="header">
-    <h1>Form Builder</h1>
-    <div class="status">3 fields added</div>
-  </header>
-
-  <main class="main-layout">
-    <aside class="sidebar">
-      <section class="card">
-        <h2>Add Field</h2>
-        <form>
-          <label>Field Type
-            <select>
-              <option>Text Input</option>
-              <option>Textarea</option>
-              <option>Select</option>
-            </select>
-          </label>
-          <button type="submit">Add Field</button>
-        </form>
-      </section>
-    </aside>
-
-    <div class="content-area">
-      <!-- Form preview -->
-    </div>
-  </main>
-</div>
-```
-
 ## BEST PRACTICES
 
 1. **Always wrap in `.bespoke`**: This prevents style conflicts with the parent site
 2. **Use semantic HTML**: Combine with proper HTML elements for accessibility
 3. **Customize via CSS variables**: Don't modify the core CSS file
 4. **Test in both themes**: Ensure your app works in light and dark modes
-5. **Mobile-first**: Design for mobile devices first, then enhance for larger screens
-
-## TROUBLESHOOTING
-
-### Styles Not Applying
-- Ensure your content is wrapped in `<div class="bespoke">`
-- Check that the CSS file is loaded correctly
-- Verify there are no CSS conflicts from the parent site
-
-### Dark Mode Not Working
-- Check if the user's system is set to dark mode
-- Verify that `@media (prefers-color-scheme: dark)` is supported
-- Override CSS variables if manual theme control is needed
-
-### Layout Issues
-- Ensure parent containers have proper height/width
-- Check for conflicting CSS from the parent site
-- Use browser dev tools to inspect computed styles
-
-## NEW COMPONENTS (NON TESTED)
-
-The following components have been added but are marked as NON TESTED. Use with caution and test thoroughly in your specific use case:
-
-### Radio Buttons
-- Custom styled radio buttons with accent color theming
-- Support for both vertical and horizontal layouts
-- Proper focus states and accessibility
-
-### Textarea
-- Multi-line text input with vertical resize
-- Consistent styling with other form inputs
-- Placeholder support
-
-### Toggle Switch
-- On/off toggle switch component
-- Smooth animations and transitions
-- Disabled state support
-- Requires specific HTML structure with hidden checkbox
