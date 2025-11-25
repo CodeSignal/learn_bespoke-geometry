@@ -36,7 +36,7 @@ A template for creating consistent help content:
 
 ### Setting Up a New Application
 
-1. **Fork the repository**
+1. **Clone the repository**
 2. **Customize the HTML template** by replacing placeholders:
    - `<!-- APP_TITLE -->` - Your application title
    - `<!-- APP_NAME -->` - Your application name (appears in header)
@@ -108,10 +108,41 @@ This template includes a local development server (`server.js`) that provides:
 ### Starting the Server
 
 ```bash
-node server.js
+# Local development
+npm run start:dev   # Vite + API for local development
+# Production
+npm run build       # Create production build in dist/
+npm run start:prod  # Serve built assets from dist/
 ```
 
-The server will start on `http://localhost:3000` by default.
+
+### Environment Variables
+
+The server supports the following environment variables:
+
+- **`PORT`** - Server port number
+  - Development: Can be set to any port (e.g., `PORT=3001`), defaulting to `3000`
+  - Production: Ignored (always `3000` when `IS_PRODUCTION=true`)
+
+- **`IS_PRODUCTION`** - Enables production mode
+  - Set to `'true'` to enable production mode
+  - When enabled:
+    - Server serves static files from `dist/` directory
+    - Port is forced to `3000`
+    - Requires `dist/` directory to exist (throws error if missing)
+
+
+### Vite Build System
+
+This project uses [Vite](https://vitejs.dev/) as the build tool for fast development and optimized production builds.
+
+#### Build Process
+
+Running `npm run build` executes `vite build`, which:
+- Reads source files from the `client/` directory (configured in `vite.config.js`)
+- Processes and bundles JavaScript, CSS, and other assets
+- Outputs optimized production files to the `dist/` directory
+- Generates hashed filenames for cache busting
 
 ### WebSocket Messaging API
 
@@ -138,3 +169,31 @@ curl -X POST http://localhost:3000/message \
   -H "Content-Type: application/json" \
   -d '{"message": "Hello from the server!"}'
 ```
+
+## CI/CD and Automated Releases
+
+This template includes a GitHub Actions workflow (`.github/workflows/build-release.yml`) that automatically builds and releases your application when you push to the `main` branch.
+
+### How It Works
+
+When you push to `main`, the workflow will:
+
+1. **Build the project** - Runs `npm run build` to create production assets in `dist/`
+2. **Create a release tarball** - Packages `dist/`, `package.json`, `server.js`, and production `node_modules/` into `release.tar.gz`
+3. **Create a GitHub Release** - Automatically creates a new release tagged as `v{run_number}` with the tarball attached
+
+### Release Contents
+
+The release tarball (`release.tar.gz`) contains everything needed to deploy the application:
+- `dist/` - Built production assets
+- `package.json` - Project dependencies and scripts
+- `server.js` - Production server
+- `node_modules/` - Production dependencies only
+
+### Using Releases
+
+To deploy a release:
+
+1. Download `release.tar.gz` from the latest GitHub Release (e.g. with `wget`)
+2. Extract (and remove) the tarball: `tar -xzf release.tar.gz && rm release.tar.gz`
+3. Start the production server: `npm run start:prod`

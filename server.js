@@ -15,7 +15,15 @@ try {
   console.log('Install with: npm install ws');
 }
 
-const PORT = 3000;
+const DIST_DIR = path.join(__dirname, 'dist');
+// Check if IS_PRODUCTION is set to true
+const isProduction = process.env.IS_PRODUCTION === 'true';
+// In production mode, dist directory must exist
+if (isProduction && !fs.existsSync(DIST_DIR)) {
+  throw new Error(`Production mode enabled but dist directory does not exist: ${DIST_DIR}`);
+}
+// Force port 3000 in production, otherwise use PORT environment variable or default to 3000
+const PORT = isProduction ? 3000 : (process.env.PORT || 3000);
 
 // Track connected WebSocket clients
 const wsClients = new Set();
@@ -28,9 +36,14 @@ const mimeTypes = {
   '.json': 'application/json',
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
   '.gif': 'image/gif',
   '.svg': 'image/svg+xml',
-  '.ico': 'image/x-icon'
+  '.ico': 'image/x-icon',
+  '.woff': 'font/woff',
+  '.woff2': 'font/woff2',
+  '.ttf': 'font/ttf',
+  '.eot': 'application/vnd.ms-fontobject'
 };
 
 // Get MIME type based on file extension
@@ -55,9 +68,7 @@ function serveFile(filePath, res) {
 }
 
 // Handle POST requests
-function handlePostRequest(req, res) {
-  const parsedUrl = url.parse(req.url, true);
-
+function handlePostRequest(req, res, parsedUrl) {
   if (parsedUrl.pathname === '/message') {
     let body = '';
 
@@ -110,48 +121,50 @@ function handlePostRequest(req, res) {
 // Create HTTP server
 const server = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url, true);
-  let pathname = parsedUrl.pathname;
+  let pathName = parsedUrl.pathname === '/' ? '/index.html' : parsedUrl.pathname;
 
   // Handle POST requests
   if (req.method === 'POST') {
-    handlePostRequest(req, res);
+    handlePostRequest(req, res, parsedUrl);
     return;
   }
 
-  // Default to index.html for root path
-  if (pathname === '/') {
-    pathname = '/index.html';
-  }
+  // In production mode, serve static files from dist directory
+  if (isProduction) {
+    // Strip leading slashes so path.join/resolve can't ignore DIST_DIR
+    let filePath = path.join(DIST_DIR, pathName.replace(/^\/+/, ''));
 
-  // Remove leading slash and construct file path
-  const filePath = path.join(__dirname, 'client', pathname.substring(1));
+    // Security check - prevent directory traversal
+    const resolvedDistDir = path.resolve(DIST_DIR);
+    const resolvedFilePath = path.resolve(filePath);
+    const relativePath = path.relative(resolvedDistDir, resolvedFilePath);
 
-  // Security check - prevent directory traversal
-  const clientDir = path.join(__dirname, 'client');
-  if (!filePath.startsWith(clientDir)) {
-    res.writeHead(403, { 'Content-Type': 'text/plain' });
-    res.end('Forbidden');
-    return;
-  }
-
-  // Check if file exists
-  fs.access(filePath, fs.constants.F_OK, (err) => {
-    if (err) {
-      res.writeHead(404, { 'Content-Type': 'text/plain' });
-      res.end('File not found');
+    // Reject if path tries to traverse outside the base directory
+    if (relativePath.startsWith('..')) {
+      res.writeHead(403, { 'Content-Type': 'text/plain' });
+      res.end('Forbidden');
       return;
     }
 
-    // Serve the file
     serveFile(filePath, res);
-  });
+  } else {
+    // Development mode - static files are served by Vite
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.end('Not found (development mode - use Vite dev server `npm run start:dev`)');
+  }
 });
 
 // Create WebSocket server only if WebSocket is available
+// Note: WebSocket upgrade handling is performed automatically by the ws library
+// when attached to the HTTP server. The HTTP request handler should NOT send
+// a response for upgrade requests - the ws library handles the upgrade internally.
 if (isWebSocketAvailable) {
-  const wss = new WebSocket.Server({ server });
+  const wss = new WebSocket.Server({
+    server,
+    path: '/ws'
+  });
 
-  wss.on('connection', (ws) => {
+  wss.on('connection', (ws, req) => {
     console.log('New WebSocket client connected');
     wsClients.add(ws);
 
@@ -170,12 +183,16 @@ if (isWebSocketAvailable) {
 // Start server
 server.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
+  if (isProduction) {
+    console.log(`Serving static files from: ${DIST_DIR}`);
+  } else {
+    console.log(`Development mode - static files served by Vite`);
+  }
   if (isWebSocketAvailable) {
-    console.log(`WebSocket server running on the same port`);
+    console.log(`WebSocket server running on /ws`);
   } else {
     console.log(`WebSocket functionality disabled - install 'ws' package to enable`);
   }
-  console.log(`Serving files from: ${__dirname}`);
   console.log('Press Ctrl+C to stop the server');
 });
 
