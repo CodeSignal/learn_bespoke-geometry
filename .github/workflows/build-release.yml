@@ -2,7 +2,8 @@ name: Build and Release
 
 on:
   push:
-    branches: [ main ]
+    tags:
+      - 'v*'
 
 permissions:
   contents: write
@@ -14,10 +15,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Populate design system submodule
         run: git submodule update --init
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -43,7 +46,7 @@ jobs:
         run: |
           tar -czf release.tar.gz dist/ package.json server.js node_modules/
 
-      - name: Upload build artifact (for workflow logs)
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: dist
@@ -53,10 +56,10 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: v${{ github.run_number }}
-          name: Release ${{ github.run_number }}
+          tag: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
           body: |
-            Latest build from main branch.
+            Release ${{ github.ref_name }}. See README for run instructions.
           artifacts: release.tar.gz
           allowUpdates: false
           draft: false

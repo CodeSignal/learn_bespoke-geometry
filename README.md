@@ -1,77 +1,60 @@
-# Geometry Plane – Bespoke Simulation Application
+# Geometry Plane
 
-An interactive 2D coordinate plane built with the Bespoke Simulation framework. Create points, lines, rays, segments, angles, and circles; find intersections; label points. Uses the CodeSignal Design System for layout and components.
+An interactive 2D coordinate plane for exploring Euclidean geometry. Build constructions with points, lines, rays, segments, angles, and circles; find intersections; label points. Built with the Bespoke Simulation framework and the CodeSignal Design System.
 
-## Components
+## What you can do
 
-### 1. Design System Integration
-This application uses the CodeSignal Design System in `client/design-system/`:
-- **Foundations**: Colors, spacing, typography tokens
-- **Components**: Buttons, boxes, inputs, dropdowns, tags, modal
-- Light and dark theme support (automatic)
+- **Points** – Place points on the grid or snap them to lines, rays, segments, and circles.
+- **Lines, rays, segments** – Draw through two points.
+- **Angles** – Mark an angle at a vertex with two arms.
+- **Circles** – Define a circle by center and a point on the circumference.
+- **Intersections** – Select two objects to add their intersection points.
+- **Labels** – Name points (e.g. A₁, B₂). Subscripts: use underscore (e.g. `A_1`).
+- **Clear** – Remove objects one by one or clear the whole construction.
 
-### 2. `client/bespoke.css`
-Bespoke layout and utilities:
-- Layout (header, sidebar, main-layout, content-area)
-- Utility classes (row, spacer)
-- Temporary form/toggle components until the design system provides them
+The plane supports pan and zoom. State is saved in the browser and can be logged for tasks and validation.
 
-### 3. `client/index.html`
-Main page: header, sidebar with tools and label panel, content area with the plane container, help button. Scripts load `app.js` (WebSocket, help modal, logger) and `geometry-plane.js`.
-
-### 4. Help modal
-Help content is loaded from `client/help-content.html` and shown via the design system Modal (`Modal.createHelpModal`). See `client/design-system/components/modal/README.md` for the API.
-
-## Running the Application
-
-1. **Install dependencies** (optional for WebSocket and logging):
-   ```bash
-   npm install
-   ```
-
-2. **Development**
-   - Build TypeScript: `npm run build` (runs `tsc`, outputs `.js` in `client/`)
-   - Start server: `node server.js` or `npm run dev:server`
-   - Or use `npm run start:dev` for Vite dev server plus API server on another port.
-
-   Default URL: `http://localhost:3000`.
-
-3. **Production**
-   - Build: `npm run build`
-   - Serve: set `IS_PRODUCTION=true` and run `node server.js` (or `npm start`) to serve from `dist/` if you use a separate build that outputs to `dist/`; otherwise serve from `client/` as in development.
-
-4. **Type-check only**: `npm run typecheck`
-
-## Server
-
-The server (`server.js`) provides:
-- Static file serving (from `client/` in development, or `dist/` in production when `IS_PRODUCTION=true`)
-- WebSocket at path `/ws` for real-time alerts
-- **POST /message** – broadcast a message to connected clients (body: `{ "message": "string" }`)
-- **POST /log** – append a line to `logs/user_actions.log` (body: `{ "message": "string" }`). The `logs/` directory is created at startup if missing.
-
-### WebSocket messaging
+## Quick start
 
 ```bash
-curl -X POST http://localhost:3000/message \
-  -H "Content-Type: application/json" \
-  -d '{"message": "Hello from the server!"}'
+npm install
+npm run build
+node server.js
 ```
 
-## Logging and validation
+Open **http://localhost:3000**. Build compiles TypeScript to `client/`; the server serves from `client/` by default.
 
-- **Server:** `POST /log` writes each `message` as one line to `logs/user_actions.log`. The geometry plane sends JSON-serialized operation objects (add, remove, intersection, clear, label) so each line is one JSON object.
-- **Client:** `logAction(message)` in `client/logger.js` sends to `/log`; exposed as `window.logAction` for validators.
-- **Validation:** Use **final state** via `getPlaneStateSnapshot()` (exported from `geometry-plane.js`) to compare the construction to an expected state, or use **operation log** via `getOperationLog()` (or the server log file) to validate the sequence of steps. See [AGENTS.md](./AGENTS.md) for details.
-
-## Framework documentation
-
-For layout, design system usage, and conventions, see [BESPOKE.md](./BESPOKE.md). For repository guidelines and validation API, see [AGENTS.md](./AGENTS.md).
-
-## CI/CD and Releases
-
-The GitHub Actions workflow (`.github/workflows/build-release.yml`) runs on push to `main`: checkout, init submodules, `npm ci`, `npm run build`, then creates a release tarball and GitHub Release. Ensure the build script produces the artifacts your deployment expects (e.g. `dist/` if the workflow packages it).
+- **Type-check only:** `npm run typecheck`
+- **Production:** set `IS_PRODUCTION=true` and run the server to serve from `dist/` (see CI for how `dist/` is produced).
 
 ## Example app
 
-`client/example-app/` is a reference application that demonstrates Bespoke layout and design system components (buttons, inputs, dropdowns, tags). Open `http://localhost:3000/example-app/index.html` when the server is running.
+`client/example-app/` demonstrates Bespoke layout and design system components. Open **http://localhost:3000/example-app/index.html** when the server is running.
+
+## For developers
+
+### Framework and docs
+
+- [BESPOKE.md](./BESPOKE.md) – Layout, design system, and conventions.
+- [AGENTS.md](./AGENTS.md) – Repo guidelines, validation API, and logging.
+
+### Server and integration
+
+The server (`server.js`) serves static files and supports:
+
+- **WebSocket** (`/ws`) – Optional; used for real-time alerts (e.g. from a Run/Submit flow).
+- **POST /message** – Broadcast a message to connected clients (`{ "message": "string" }`).
+- **POST /log** – Append a line to `logs/user_actions.log` (`{ "message": "string" }`). Used for operation logging.
+
+### Logging and validation
+
+The geometry plane logs each construction change (add, remove, intersection, clear, label) to the server and keeps an in-memory operation log. For task validation:
+
+- **Final state** – `getPlaneStateSnapshot()` (from `geometry-plane.js`) returns the current construction as a serializable array.
+- **Operation log** – `getOperationLog()` returns the sequence of operations; the same data is written to `logs/user_actions.log`.
+
+Details and payload formats: [AGENTS.md](./AGENTS.md).
+
+## Releases
+
+Published from version tags (e.g. `v1.0.0`); see the [Releases](https://github.com/CodeSignal/learn_bespoke-geometry/releases) page.
