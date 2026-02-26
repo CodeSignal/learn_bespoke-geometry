@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Geometry Plane</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Fonts (Work Sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Design System Foundations -->
+  <link rel="stylesheet" href="./design-system/colors/colors.css">
+  <link rel="stylesheet" href="./design-system/spacing/spacing.css">
+  <link rel="stylesheet" href="./design-system/typography/typography.css">
+
+  <!-- Design System Components -->
+  <link rel="stylesheet" href="./design-system/components/button/button.css">
+  <link rel="stylesheet" href="./design-system/components/boxes/boxes.css">
+  <link rel="stylesheet" href="./design-system/components/input/input.css">
+  <link rel="stylesheet" href="./design-system/components/dropdown/dropdown.css">
+  <link rel="stylesheet" href="./design-system/components/tags/tags.css">
+  <link rel="stylesheet" href="./design-system/components/modal/modal.css">
+
+  <!-- Template-specific components (layout, utilities, temporary components) -->
+  <link rel="stylesheet" href="./bespoke.css" />
+  <link rel="stylesheet" href="./geometry-plane.css" />
+</head>
+<body class="bespoke">
+  <!-- Navigation Header -->
+  <header class="header">
+    <h1 class="heading-small">Geometry Plane</h1>
+    <button id="btn-clear" class="button button-tertiary" type="button">Clear</button>
+    <div class="spacer"></div>
+    <button id="btn-help" class="button button-text">Help</button>
+  </header>
+
+  <!-- Main Application Content -->
+  <main class="main-layout">
+    <aside class="sidebar">
+      <section class="box card tools-panel">
+        <h2 class="heading-small">Tools</h2>
+        <div class="geometry-tools" role="group" aria-label="Geometry tools">
+          <button type="button" class="button button-tertiary geometry-tool active" data-tool="point">Point</button>
+          <button type="button" class="button button-tertiary geometry-tool" data-tool="line">Line</button>
+          <button type="button" class="button button-tertiary geometry-tool" data-tool="ray">Ray</button>
+          <button type="button" class="button button-tertiary geometry-tool" data-tool="segment">Segment</button>
+          <button type="button" class="button button-tertiary geometry-tool" data-tool="angle">Angle</button>
+          <button type="button" class="button button-tertiary geometry-tool" data-tool="circle">Circle</button>
+          <button type="button" class="button button-tertiary geometry-tool" data-tool="intersection">Intersection</button>
+          <button type="button" class="button button-tertiary geometry-tool" data-tool="remove">Remove</button>
+        </div>
+      </section>
+      <section id="label-panel" class="box card label-panel" aria-label="Object label" hidden>
+        <h2 class="heading-small">Label</h2>
+        <div class="label-panel-row">
+          <input type="text" id="object-label-input" class="input input-default" placeholder="e.g. A_1, B_3" maxlength="32" aria-label="Point name" />
+          <button type="button" id="btn-label-done" class="button button-tertiary">Done</button>
+        </div>
+        <p class="label-panel-hint">Use underscore for subscript: A_1 → A₁</p>
+      </section>
+    </aside>
+    <div class="content-area">
+      <div id="plane-container" class="plane-container"></div>
+    </div>
+  </main>
+
+  <!-- Core Scripts (built from .ts via npm run build) -->
+  <script type="module" src="./app.js"></script>
+  <script type="module" src="./geometry-plane.js"></script>
+</body>
+</html>

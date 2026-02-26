@@ -1,0 +1,247 @@
+/* ===== GEOMETRY PLANE APP ===== */
+/* Plane container and SVG styling using CodeSignal Design System tokens */
+
+/* Full viewport height so the plane fits the screen */
+html {
+  height: 100%;
+}
+
+body.bespoke {
+  min-height: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.bespoke .main-layout {
+  flex: 1;
+  min-height: 0;
+  grid-template-rows: 1fr;
+}
+
+.bespoke .content-area {
+  min-height: 0;
+}
+
+.bespoke .plane-container {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  background: #fff;
+}
+
+.bespoke .plane-container svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: crosshair;
+  shape-rendering: geometricPrecision;
+}
+
+/* Subtle grid – light reference lines, not dominant squares */
+.bespoke .plane-container .plane-grid line {
+  stroke: var(--Colors-Stroke-Default);
+  stroke-opacity: 0.35;
+  stroke-width: 0.08;
+}
+
+.bespoke .plane-container .plane-grid-major line {
+  stroke: var(--Colors-Stroke-Default);
+  stroke-opacity: 0.5;
+  stroke-width: 0.12;
+}
+
+/* Clean axes */
+.bespoke .plane-container .plane-axes line {
+  stroke: var(--Colors-Stroke-Strong);
+  stroke-opacity: 0.85;
+  stroke-width: 0.15;
+}
+
+/* Geometry objects */
+.bespoke .plane-container .plane-point {
+  fill: var(--Colors-Primary-Default);
+  stroke: var(--Colors-Text-Body-Strongest);
+  stroke-width: 0.15;
+}
+
+/* Hover preview when Point tool is selected */
+.bespoke .plane-container .plane-point-preview {
+  fill: var(--Colors-Primary-Default);
+  fill-opacity: 0.45;
+  stroke: var(--Colors-Text-Body-Strongest);
+  stroke-opacity: 0.5;
+  stroke-width: 0.15;
+}
+
+.bespoke .plane-container .plane-line,
+.bespoke .plane-container .plane-ray,
+.bespoke .plane-container .plane-segment {
+  stroke: var(--Colors-Primary-Default);
+  stroke-width: 0.2;
+  fill: none;
+}
+
+.bespoke .plane-container .plane-angle-arc {
+  stroke: var(--Colors-Primary-Default);
+  stroke-width: 0.2;
+  fill: none;
+}
+
+.bespoke .plane-container .plane-circle {
+  stroke: var(--Colors-Primary-Default);
+  stroke-width: 0.2;
+  fill: none;
+}
+
+/* Selected for Intersection tool – orange so user sees what is selected */
+.bespoke .plane-container .plane-point.plane-intersection-selected,
+.bespoke .plane-container .plane-intersection-selected.plane-point {
+  fill: #e65100;
+  stroke: #bf360c;
+}
+.bespoke .plane-container .plane-line.plane-intersection-selected,
+.bespoke .plane-container .plane-ray.plane-intersection-selected,
+.bespoke .plane-container .plane-segment.plane-intersection-selected {
+  stroke: #e65100;
+  stroke-width: 0.28;
+}
+.bespoke .plane-container .plane-circle.plane-intersection-selected {
+  stroke: #e65100;
+  stroke-width: 0.28;
+}
+
+/* Hover previews for Line, Ray, Segment, Angle, Circle */
+.bespoke .plane-container .plane-line-preview,
+.bespoke .plane-container .plane-ray-preview,
+.bespoke .plane-container .plane-segment-preview {
+  stroke: var(--Colors-Primary-Default);
+  stroke-opacity: 0.5;
+  stroke-width: 0.2;
+  fill: none;
+}
+
+.bespoke .plane-container .plane-angle-arc-preview {
+  stroke: var(--Colors-Primary-Default);
+  stroke-opacity: 0.5;
+  stroke-width: 0.2;
+  fill: none;
+}
+
+.bespoke .plane-container .plane-circle-preview {
+  stroke: var(--Colors-Primary-Default);
+  stroke-opacity: 0.5;
+  stroke-width: 0.2;
+  fill: none;
+}
+
+/* Tools panel card – stack title above buttons (override .box flex) */
+.bespoke .sidebar .tools-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: var(--UI-Spacing-spacing-ml);
+  border-radius: var(--UI-Radius-radius-m);
+  border: 1px solid var(--Colors-Stroke-Default);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.bespoke .tools-panel .heading-small {
+  margin: 0 0 var(--UI-Spacing-spacing-xxl) 0;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--Colors-Text-Body-Strongest);
+}
+
+.bespoke .geometry-tools {
+  display: flex;
+  flex-direction: column;
+  gap: var(--UI-Spacing-spacing-s);
+}
+
+/* Tool buttons */
+.bespoke .geometry-tool {
+  padding: var(--UI-Spacing-spacing-s) var(--UI-Spacing-spacing-ml);
+  border-radius: var(--UI-Radius-radius-s);
+  font-weight: 500;
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+}
+
+.bespoke .geometry-tool:hover {
+  background: var(--Colors-Backgrounds-Main-Light);
+  border-color: var(--Colors-Stroke-Strong);
+}
+
+.bespoke .geometry-tool:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--Colors-Primary-Default);
+}
+
+.bespoke .geometry-tool.active {
+  background: var(--Colors-Primary-Default);
+  color: var(--Colors-Buttons-Primary-Default-Text);
+  border-color: var(--Colors-Primary-Default);
+  box-shadow: 0 2px 6px rgba(66, 133, 244, 0.35);
+}
+
+.bespoke .geometry-tool.active:hover {
+  background: var(--Colors-Primary-Default);
+  border-color: var(--Colors-Primary-Default);
+  box-shadow: 0 2px 8px rgba(66, 133, 244, 0.45);
+}
+
+/* Label panel – shown when an object is selected */
+.bespoke .label-panel[hidden] {
+  display: none !important;
+}
+.bespoke .label-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: var(--UI-Spacing-spacing-ml);
+  border-radius: var(--UI-Radius-radius-m);
+  border: 1px solid var(--Colors-Stroke-Default);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  margin-top: var(--UI-Spacing-spacing-m);
+}
+
+.bespoke .label-panel .heading-small {
+  margin: 0 0 var(--UI-Spacing-spacing-s) 0;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--Colors-Text-Body-Strongest);
+}
+
+.bespoke .label-panel-row {
+  display: flex;
+  gap: var(--UI-Spacing-spacing-s);
+  align-items: center;
+}
+
+.bespoke .label-panel-row .input {
+  flex: 1;
+  min-width: 0;
+}
+
+.bespoke .label-panel-hint {
+  margin: var(--UI-Spacing-spacing-s) 0 0;
+  font-size: 0.75rem;
+  color: var(--Colors-Text-Body-Subtle, #666);
+}
+
+/* Object labels on the plane – font-size set in JS in viewBox units so they scale with zoom */
+.bespoke .plane-container .plane-label {
+  font-family: inherit;
+  fill: #1a1a1a;
+  pointer-events: none;
+  user-select: none;
+}
+
+.bespoke .plane-container .plane-label-selected {
+  font-weight: 600;
+  fill: #1967d2;
+}

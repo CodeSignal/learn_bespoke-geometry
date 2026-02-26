@@ -1,0 +1,35 @@
+{
+  "name": "bespoke-geometry-plane",
+  "version": "0.0.2",
+  "description": "Geometry Plane – Bespoke Simulation application with WebSocket and operation logging",
+  "main": "server.js",
+  "scripts": {
+    "start": "npm run start:prod",
+    "start:prod": "IS_PRODUCTION=true node server.js",
+    "start:dev": "concurrently \"npm run dev:vite\" \"npm run dev:api\"",
+    "dev": "npm run build && node server.js",
+    "dev:server": "node server.js",
+    "dev:vite": "vite",
+    "dev:api": "PORT=3001 node server.js",
+    "build": "tsc",
+    "build:vite": "vite build",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "bespoke",
+    "geometry",
+    "development",
+    "server",
+    "websocket"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.14.2"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "typescript": "^5.9.3",
+    "vite": "^5.4.11"
+  }
+}
