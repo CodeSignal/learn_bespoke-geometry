@@ -73,7 +73,7 @@ Requires `ws` package: `npm install`.
 
 ### Validation
 
-Validators can use either or both of:
+There is no validation API or server endpoint. **Validation is log-based:** run `npm run validate` (or `node run-validate.mjs`); the script reads `logs/user_actions.log`, replays operations via `validate/replay.ts`, and runs the task validator selected by `TASK` (default `line-and-points`). Tasks: `line-and-points`, `equilateral-triangle`, `parallel-lines`. Set `LOG_FILE` to override log path. Snapshot file or stdin: `node run-validate.mjs snapshot.json` or pipe JSON. Exit code 0 = valid, 1 = invalid. **Replay** lives in `validate/replay.ts` (canonical operation replay). **Validators** and task registry in `validate/tasks.ts`; geometry helpers in `validate/geometry.ts`. When adding a new task, add a validator in `validate/tasks.ts` and register it in `TASK_REGISTRY`. Validators can use either or both of:
 
 1. **Final state** – Call **`getPlaneStateSnapshot()`** (exported from `geometry-plane.js`). Returns an array of `{ geom, name?, labelAngle? }` in the same form as saved state. Compare to an expected construction (e.g. same set of objects, coordinate tolerance).
 
@@ -96,6 +96,12 @@ client/
   ├── geometry-objects.ts  # Point, Line, Ray, Segment, Angle, Circle
   ├── help-content.html    # Help modal content
   └── design-system/       # CodeSignal Design System
+validate/
+  ├── types.ts             # GeomObject, SnapshotEntry, OperationLogEntry
+  ├── geometry.ts          # distToLine, segmentLength, areParallel, etc.
+  ├── replay.ts            # Full operation replay (replayLogToSnapshot, replayLogFromString)
+  └── tasks.ts             # Task validators + TASK_REGISTRY
+run-validate.mjs           # CLI: log/file/stdin -> replay -> run task validator
 server.js                  # Static server, WebSocket, POST /message, POST /log
 ```
 

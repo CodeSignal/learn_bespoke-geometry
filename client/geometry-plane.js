@@ -938,3 +938,7 @@ if (document.readyState === 'loading') {
 else {
     init();
 }
+if (typeof window !== 'undefined') {
+    window.getPlaneStateSnapshot = getPlaneStateSnapshot;
+    window.getOperationLog = getOperationLog;
+}

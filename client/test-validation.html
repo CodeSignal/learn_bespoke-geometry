@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Task validation test</title>
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 1rem; }
+    h1 { font-size: 1.25rem; }
+    .row { display: flex; gap: 1rem; align-items: flex-start; flex-wrap: wrap; }
+    iframe { border: 1px solid #ccc; width: 900px; height: 600px; }
+    .panel { max-width: 320px; }
+    .panel p { margin: 0.5rem 0; color: #333; }
+    .result { margin-top: 0.75rem; padding: 0.75rem; border-radius: 6px; font-weight: 500; }
+    .result.pass { background: #d4edda; color: #155724; }
+    .result.fail { background: #f8d7da; color: #721c24; }
+    .task { background: #e7f3ff; padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem; font-size: 0.9rem; }
+    button { padding: 0.5rem 1rem; font-size: 1rem; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Task validation test</h1>
+  <div class="task">
+    <strong>Task:</strong> Draw a line, then draw 3 points on the line and 2 points not on the line.
+  </div>
+  <div class="row">
+    <div>
+      <iframe id="plane" src="index.html" title="Geometry plane"></iframe>
+    </div>
+    <div class="panel">
+      <p>Use the plane on the left to complete the task, then click below to validate.</p>
+      <button type="button" id="validate-btn">Validate task</button>
+      <div id="result" class="result" style="display: none;"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { validateLineWithPointsTask } from './validate-task.js';
+
+    const iframe = document.getElementById('plane');
+    const btn = document.getElementById('validate-btn');
+    const resultEl = document.getElementById('result');
+
+    btn.addEventListener('click', () => {
+      try {
+        const win = iframe.contentWindow;
+        if (!win || typeof win.getPlaneStateSnapshot !== 'function') {
+          resultEl.textContent = 'Snapshot not available. Is the plane loaded?';
+          resultEl.className = 'result fail';
+          resultEl.style.display = 'block';
+          return;
+        }
+        const snapshot = win.getPlaneStateSnapshot();
+        const out = validateLineWithPointsTask(snapshot);
+        resultEl.textContent = out.message;
+        resultEl.className = 'result ' + (out.valid ? 'pass' : 'fail');
+        resultEl.style.display = 'block';
+      } catch (err) {
+        resultEl.textContent = 'Error: ' + err.message;
+        resultEl.className = 'result fail';
+        resultEl.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -11,9 +11,10 @@
     "dev:server": "node server.js",
     "dev:vite": "vite",
     "dev:api": "PORT=3001 node server.js",
-    "build": "tsc",
+    "build": "tsc && tsc -p tsconfig.validate.json",
     "build:vite": "vite build",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "validate": "node run-validate.mjs"
   },
   "keywords": [
     "bespoke",
@@ -28,6 +29,7 @@
     "ws": "^8.14.2"
   },
   "devDependencies": {
+    "@types/node": "^22.0.0",
     "concurrently": "^8.2.2",
     "typescript": "^5.9.3",
     "vite": "^5.4.11"

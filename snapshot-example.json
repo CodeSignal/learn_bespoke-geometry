@@ -1,0 +1,8 @@
+[
+  { "geom": { "type": "line", "x1": 0, "y1": 0, "x2": 10, "y2": 0 } },
+  { "geom": { "type": "point", "x": 2, "y": 0 } },
+  { "geom": { "type": "point", "x": 5, "y": 0 } },
+  { "geom": { "type": "point", "x": 8, "y": 0 } },
+  { "geom": { "type": "point", "x": 3, "y": 3 } },
+  { "geom": { "type": "point", "x": 7, "y": -2 } }
+]

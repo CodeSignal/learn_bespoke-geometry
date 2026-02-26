@@ -971,3 +971,8 @@ if (document.readyState === 'loading') {
 } else {
   init();
 }
+
+if (typeof window !== 'undefined') {
+  (window as unknown as { getPlaneStateSnapshot: typeof getPlaneStateSnapshot; getOperationLog: typeof getOperationLog }).getPlaneStateSnapshot = getPlaneStateSnapshot;
+  (window as unknown as { getPlaneStateSnapshot: typeof getPlaneStateSnapshot; getOperationLog: typeof getOperationLog }).getOperationLog = getOperationLog;
+}
