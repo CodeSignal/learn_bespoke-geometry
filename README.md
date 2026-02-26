@@ -75,31 +75,3 @@ The GitHub Actions workflow (`.github/workflows/build-release.yml`) runs on push
 ## Example app
 
 `client/example-app/` is a reference application that demonstrates Bespoke layout and design system components (buttons, inputs, dropdowns, tags). Open `http://localhost:3000/example-app/index.html` when the server is running.
-
-## Pushing to your own GitHub repo
-
-If you cloned from `CodeSignal/learn_bespoke-template`, the git remote still points at that repo. To push this project to a new GitHub repository under your account or org:
-
-1. **Create a new repository on GitHub** (empty, no README/license/gitignore).
-
-2. **Point this repo’s `origin` at the new URL** (replace with your repo URL):
-   ```bash
-   git remote set-url origin git@github.com:YOUR_USER_OR_ORG/YOUR_REPO_NAME.git
-   ```
-   Or with HTTPS:
-   ```bash
-   git remote set-url origin https://github.com/YOUR_USER_OR_ORG/YOUR_REPO_NAME.git
-   ```
-
-3. **Push your branch** (e.g. `main`):
-   ```bash
-   git push -u origin main
-   ```
-
-4. **Optional: rename the project folder** to match the new repo (e.g. `bespoke-geometry-plane` or `learn_bespoke-geometry`). Do this outside the folder (e.g. from `Documents/work/`):
-   ```bash
-   mv learn_bespoke-template bespoke-geometry-plane
-   ```
-   Then open the renamed folder in your editor. Git history is unchanged; only the directory name changes.
-
-The design-system submodule (`client/design-system`) will continue to track the CodeSignal design-system repo; you don’t need to change that to push your own repo.
