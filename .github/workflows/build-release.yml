@@ -30,6 +30,11 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Create dist for release
+        run: |
+          mkdir -p dist
+          cp -r client/* dist/
+
       - name: Install production dependencies only
         run: |
           npm ci --production
