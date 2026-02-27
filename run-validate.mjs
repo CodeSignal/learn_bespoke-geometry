@@ -9,7 +9,7 @@
  *   TASK=equilateral-triangle node run-validate.mjs
  *   TASK=parallel-lines node run-validate.mjs
  *   node run-validate.mjs snapshot.json      # validate snapshot file
- *   node run-validate.mjs < snapshot.json    # validate from stdin
+ *   node run-validate.mjs - < snapshot.json  # validate from stdin (explicit -)
  *
  * Tasks: line-and-points (default) | equilateral-triangle | parallel-lines |
  *        prove-opposite-rays | prove-perpendicular-bisector
@@ -69,11 +69,11 @@ async function main() {
   let snapshot;
   let proofSteps;
   let taskStatement;
-  if (fileArg) {
+  if (fileArg && fileArg !== '-') {
     snapshot = readSnapshotFromFile(fileArg);
     proofSteps = undefined;
     taskStatement = undefined;
-  } else if (!process.stdin.isTTY) {
+  } else if (fileArg === '-') {
     snapshot = await readStdin();
     proofSteps = undefined;
     taskStatement = undefined;
