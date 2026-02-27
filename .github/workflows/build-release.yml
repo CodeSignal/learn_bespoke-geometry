@@ -44,7 +44,7 @@ jobs:
 
       - name: Create release tarball
         run: |
-          tar -czf release.tar.gz dist/ package.json server.js node_modules/
+          tar -czf release.tar.gz dist/ package.json server.js node_modules/ run-validate.mjs validate/
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
