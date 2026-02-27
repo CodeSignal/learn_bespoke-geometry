@@ -3,3 +3,10 @@ dist/
 logs/
 snapshot.json
 .DS_Store
+
+# Compiled TypeScript output (build with: npm run build)
+client/*.js
+!client/logger.js
+client/geometry-plane/*.js
+client/proof/*.js
+validate/*.js

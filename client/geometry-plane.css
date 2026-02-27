@@ -139,6 +139,162 @@ body.bespoke {
   fill: none;
 }
 
+/* Sidebar mode: Tools | Proof – pill-style segmented control */
+.bespoke .sidebar-mode-toggle {
+  display: flex;
+  margin-bottom: var(--UI-Spacing-spacing-m);
+  padding: 3px;
+  background: var(--Colors-Backgrounds-Main-Light, #f0f0f0);
+  border-radius: 999px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.bespoke .sidebar-mode-btn {
+  flex: 1;
+  border: none;
+  border-radius: 999px;
+  font-weight: 500;
+  box-shadow: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.bespoke .sidebar-mode-btn:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.bespoke .sidebar-mode-btn.active {
+  background: var(--Colors-Primary-Default);
+  color: var(--Colors-Buttons-Primary-Default-Text);
+  border-color: transparent;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+/* Hide tools panel when Proof mode is active */
+.bespoke .tools-panel[hidden] {
+  display: none !important;
+}
+
+/* Proof panel */
+.bespoke .proof-panel[hidden] {
+  display: none !important;
+}
+
+.bespoke .proof-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 0;
+  overflow-y: auto;
+  padding: var(--UI-Spacing-spacing-ml);
+  border-radius: var(--UI-Radius-radius-m);
+  border: 1px solid var(--Colors-Stroke-Default);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  margin-top: 0;
+}
+
+.bespoke .proof-panel .heading-small {
+  margin: 0 0 var(--UI-Spacing-spacing-s) 0;
+}
+
+.bespoke .proof-hint {
+  margin: 0 0 var(--UI-Spacing-spacing-m);
+  font-size: 0.875rem;
+  color: var(--Colors-Text-Body-Subtle, #666);
+}
+
+.bespoke .proof-steps {
+  min-height: 4rem;
+  margin-bottom: var(--UI-Spacing-spacing-m);
+  padding: var(--UI-Spacing-spacing-s);
+  background: var(--Colors-Backgrounds-Main-Light, #f5f5f5);
+  border-radius: var(--UI-Radius-radius-s);
+  font-size: 0.875rem;
+  font-family: ui-monospace, monospace;
+}
+
+.bespoke .proof-step-item {
+  margin: 0.25rem 0;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid var(--Colors-Stroke-Default);
+}
+
+.bespoke .proof-step-item:last-child {
+  border-bottom: none;
+}
+
+.bespoke .proof-step-item.error {
+  color: var(--Colors-Text-Body-Subtle);
+}
+
+.bespoke .proof-add {
+  display: flex;
+  flex-direction: column;
+  gap: var(--UI-Spacing-spacing-s);
+}
+
+.bespoke .proof-add-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--Colors-Text-Body-Strongest);
+}
+
+.bespoke .proof-axiom-select {
+  width: 100%;
+}
+
+.bespoke .proof-outcome-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--UI-Spacing-spacing-s);
+}
+
+.bespoke .proof-prereqs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--UI-Spacing-spacing-s);
+}
+
+.bespoke .proof-prereq-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.bespoke .proof-prereq-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--UI-Spacing-spacing-s);
+}
+
+/* Point-name inputs unused; outcome is a single text field. Keep block hidden. */
+.bespoke .proof-point-names {
+  display: none !important;
+  gap: var(--UI-Spacing-spacing-s);
+  flex-wrap: wrap;
+}
+
+.bespoke .proof-point-names .proof-point-input {
+  flex: 1;
+  min-width: 2.5rem;
+}
+
+.bespoke .proof-step-message {
+  margin: var(--UI-Spacing-spacing-s) 0 0;
+  font-size: 0.8125rem;
+  min-height: 1.25rem;
+}
+
+.bespoke .proof-step-message.success {
+  color: var(--Colors-Primary-Default);
+}
+
+.bespoke .proof-step-message.error {
+  color: var(--Colors-Text-Body-Subtle);
+}
+
 /* Tools panel card – stack title above buttons (override .box flex) */
 .bespoke .sidebar .tools-panel {
   display: flex;

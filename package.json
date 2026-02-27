@@ -12,6 +12,7 @@
     "dev:vite": "vite",
     "dev:api": "PORT=3001 node server.js",
     "build": "tsc && tsc -p tsconfig.validate.json",
+    "build:watch": "tsc --watch",
     "build:vite": "vite build",
     "typecheck": "tsc --noEmit",
     "validate": "node run-validate.mjs"

@@ -11,7 +11,8 @@
  *   node run-validate.mjs snapshot.json      # validate snapshot file
  *   node run-validate.mjs < snapshot.json    # validate from stdin
  *
- * Tasks: line-and-points (default) | equilateral-triangle | parallel-lines
+ * Tasks: line-and-points (default) | equilateral-triangle | parallel-lines |
+ *        prove-opposite-rays | prove-perpendicular-bisector
  * LOG_FILE=path/to.log to override log path.
  * Exit code: 0 = valid, 1 = invalid or error.
  */
@@ -28,6 +29,8 @@ const DEFAULT_LOG_FILE = resolve(process.cwd(), 'logs', 'user_actions.log');
 
 const replay = require('./validate/replay.js');
 const tasks = require('./validate/tasks.js');
+
+const PROOF_TASKS = new Set(['prove-opposite-rays', 'prove-perpendicular-bisector']);
 
 function readSnapshotFromFile(path) {
   const fullPath = resolve(process.cwd(), path);
@@ -64,21 +67,36 @@ async function main() {
   const taskId = process.env.TASK || 'line-and-points';
 
   let snapshot;
+  let proofSteps;
+  let taskStatement;
   if (fileArg) {
     snapshot = readSnapshotFromFile(fileArg);
+    proofSteps = undefined;
+    taskStatement = undefined;
   } else if (!process.stdin.isTTY) {
     snapshot = await readStdin();
+    proofSteps = undefined;
+    taskStatement = undefined;
   } else {
     const logPath = process.env.LOG_FILE ? resolve(process.cwd(), process.env.LOG_FILE) : DEFAULT_LOG_FILE;
     try {
-      snapshot = replay.replayLogToSnapshot(logPath);
+      if (PROOF_TASKS.has(taskId)) {
+        const parsed = replay.parseLogFile(logPath);
+        snapshot = parsed.snapshot;
+        proofSteps = parsed.proofSteps;
+        taskStatement = undefined;
+      } else {
+        snapshot = replay.replayLogToSnapshot(logPath);
+        proofSteps = undefined;
+        taskStatement = undefined;
+      }
     } catch (e) {
       console.error(e.message);
       process.exit(1);
     }
   }
 
-  const result = tasks.runTask(taskId, snapshot);
+  const result = tasks.runTask(taskId, snapshot, { proofSteps, taskStatement });
 
   console.log(result.message);
   process.exit(result.valid ? 0 : 1);

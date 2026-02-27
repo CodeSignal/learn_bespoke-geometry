@@ -26,15 +26,38 @@ export interface ValidationResult {
   message: string;
 }
 
+/** Outcome of a proof step (statement kind and point names). */
+export interface ProofStepOutcome {
+  kind: string;
+  pointNames: string[];
+}
+
+/** Proof step log entry. */
+export interface ProofStepLogEntry {
+  op: 'proof_step';
+  reasonId: string;
+  outcome: ProofStepOutcome;
+  prerequisiteRefs: ('given' | number)[];
+}
+
+/** Task statement log entry (givens and goal for validation). */
+export interface TaskStatementLogEntry {
+  op: 'task_statement';
+  givens: ProofStepOutcome[];
+  goal: ProofStepOutcome;
+}
+
 /** Operation log entry: one JSON object per log line (client geometry-plane contract). */
 export type OperationLogEntry =
   | { op: 'add'; tool: string; geom: GeomObject }
   | { op: 'remove'; index: number; geom: GeomObject }
   | { op: 'intersection'; objects: [GeomObject, GeomObject]; added: GeomObject[] }
   | { op: 'clear' }
-  | { op: 'label'; index: number; name: string };
+  | { op: 'label'; index: number; name: string }
+  | ProofStepLogEntry
+  | TaskStatementLogEntry;
 
-const VALID_OPS = new Set<string>(['add', 'remove', 'intersection', 'clear', 'label']);
+const VALID_OPS = new Set<string>(['add', 'remove', 'intersection', 'clear', 'label', 'proof_step', 'task_statement']);
 
 export function isOperationLogEntry(entry: unknown): entry is OperationLogEntry {
   if (!entry || typeof entry !== 'object' || !('op' in entry)) return false;

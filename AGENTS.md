@@ -43,11 +43,11 @@ This application provides:
 
 ### TypeScript
 
-The geometry plane and app entry use **TypeScript** (`.ts`). Run type-check with:
-```bash
-npm run typecheck
-```
-Build with `npm run build` (runs `tsc`; output in `client/`).
+The geometry plane and app entry use **TypeScript** (`.ts`). The browser loads the **compiled JavaScript** (`client/*.js`); editing a `.ts` file does not update the `.js` until you recompile.
+
+- **Type-check only:** `npm run typecheck`
+- **Compile once:** `npm run build` (runs `tsc`; writes `client/*.js` and `validate/*.js`). Run this after changing any `.ts` file so the app uses your changes.
+- **Compile on save:** `npm run build:watch` — runs `tsc --watch` so that saving a `.ts` file automatically updates the corresponding `.js`. Use this in a separate terminal while developing.
 
 ### WebSocket Messaging
 

@@ -24,6 +24,27 @@ export type GeomObject =
   | { type: 'angle'; x1: number; y1: number; vx: number; vy: number; x2: number; y2: number }
   | { type: 'circle'; cx: number; cy: number; r: number };
 
+/** Angle at vertex (mx,my) between rays to (ax,ay) and (bx,by), in degrees [0, 180]. */
+export function angleAtVertexDeg(
+  ax: number,
+  ay: number,
+  mx: number,
+  my: number,
+  bx: number,
+  by: number
+): number {
+  const ux = ax - mx;
+  const uy = ay - my;
+  const vx = bx - mx;
+  const vy = by - my;
+  const ul = Math.hypot(ux, uy);
+  const vl = Math.hypot(vx, vy);
+  if (ul < 1e-12 || vl < 1e-12) return 0;
+  const dot = ux * vx + uy * vy;
+  const cos = Math.max(-1, Math.min(1, dot / (ul * vl)));
+  return (Math.acos(cos) * 180) / Math.PI;
+}
+
 /** Distance from point (x,y) to infinite line through (x1,y1)-(x2,y2). */
 export function distToLine(x: number, y: number, x1: number, y1: number, x2: number, y2: number): number {
   const dx = x2 - x1, dy = y2 - y1;

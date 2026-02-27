@@ -14,11 +14,11 @@
  */
 
 import { readFileSync, existsSync } from 'fs';
-import type { SnapshotEntry, OperationLogEntry } from './types.js';
+import type { SnapshotEntry, OperationLogEntry, ProofStepLogEntry, TaskStatementLogEntry } from './types.js';
 import { isOperationLogEntry } from './types.js';
 
 /**
- * Replay a log string into final state. Skips non-JSON or non-op lines.
+ * Replay a log string into final state. Skips non-JSON or non-op lines. Ignores proof_step entries for state.
  */
 export function replayLogFromString(text: string): SnapshotEntry[] {
   const state: SnapshotEntry[] = [];
@@ -34,7 +34,8 @@ export function replayLogFromString(text: string): SnapshotEntry[] {
       continue;
     }
     if (!isOperationLogEntry(entry)) continue;
-    applyEntry(state, entry);
+    if ((entry as OperationLogEntry).op === 'proof_step') continue;
+    applyEntry(state, entry as OperationLogEntry);
   }
 
   return state;
@@ -54,6 +55,55 @@ export function replayLogToSnapshot(logPath: string): SnapshotEntry[] {
     throw new Error('Log file is empty. Ensure the student has performed actions in the app.');
   }
   return replayLogFromString(text);
+}
+
+/**
+ * Parse a log file and return replayed snapshot, proof steps, and last task statement (if any).
+ */
+export function parseLogFile(logPath: string): {
+  snapshot: SnapshotEntry[];
+  proofSteps: ProofStepLogEntry[];
+  taskStatement: TaskStatementLogEntry | undefined;
+} {
+  if (!existsSync(logPath)) {
+    throw new Error(
+      `Log file not found: ${logPath}. Ensure the app is running and the student has performed actions.`
+    );
+  }
+  const text = readFileSync(logPath, 'utf8').trim();
+  if (!text) {
+    throw new Error('Log file is empty. Ensure the student has performed actions in the app.');
+  }
+  const state: SnapshotEntry[] = [];
+  const proofSteps: ProofStepLogEntry[] = [];
+  let taskStatement: TaskStatementLogEntry | undefined;
+  const lines = text.trim().split('\n');
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+    let entry: unknown;
+    try {
+      entry = JSON.parse(trimmed);
+    } catch {
+      continue;
+    }
+    if (!isOperationLogEntry(entry)) continue;
+    const op = (entry as OperationLogEntry).op;
+    if (op === 'proof_step') {
+      const ps = entry as ProofStepLogEntry;
+      if (ps.outcome && Array.isArray(ps.prerequisiteRefs)) {
+        proofSteps.push(ps);
+      }
+    } else if (op === 'task_statement') {
+      const ts = entry as TaskStatementLogEntry;
+      if (Array.isArray(ts.givens) && ts.goal) taskStatement = ts;
+    } else {
+      applyEntry(state, entry as OperationLogEntry);
+    }
+  }
+
+  return { snapshot: state, proofSteps, taskStatement };
 }
 
 function applyEntry(state: SnapshotEntry[], entry: OperationLogEntry): void {
@@ -83,6 +133,9 @@ function applyEntry(state: SnapshotEntry[], entry: OperationLogEntry): void {
       ) {
         state[entry.index].name = String(entry.name).trim() || undefined;
       }
+      break;
+    case 'proof_step':
+    case 'task_statement':
       break;
   }
 }

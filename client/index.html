@@ -38,7 +38,11 @@
   <!-- Main Application Content -->
   <main class="main-layout">
     <aside class="sidebar">
-      <section class="box card tools-panel">
+      <div class="sidebar-mode-toggle" role="tablist" aria-label="Sidebar mode">
+        <button type="button" class="button button-tertiary sidebar-mode-btn active" data-mode="tools" role="tab" aria-selected="true">Tools</button>
+        <button type="button" class="button button-tertiary sidebar-mode-btn" data-mode="proof" role="tab" aria-selected="false">Proof</button>
+      </div>
+      <section id="tools-panel" class="box card tools-panel" role="tabpanel">
         <h2 class="heading-small">Tools</h2>
         <div class="geometry-tools" role="group" aria-label="Geometry tools">
           <button type="button" class="button button-tertiary geometry-tool active" data-tool="point">Point</button>
@@ -51,13 +55,40 @@
           <button type="button" class="button button-tertiary geometry-tool" data-tool="remove">Remove</button>
         </div>
       </section>
+      <section id="proof-panel" class="box card proof-panel" role="tabpanel" hidden aria-label="Proof">
+        <h2 class="heading-small">Proof</h2>
+        <p class="proof-hint">Each step: outcome (write statement), reason, and prerequisites.</p>
+        <div id="proof-steps" class="proof-steps" aria-label="Proof steps"></div>
+        <div class="proof-add">
+          <label for="proof-axiom-select" class="proof-add-label">Reason</label>
+          <select id="proof-axiom-select" class="input input-default proof-axiom-select" aria-label="Choose reason">
+            <option value="">— Choose reason —</option>
+          </select>
+          <div id="proof-outcome-section" class="proof-outcome-section" hidden>
+            <label for="proof-outcome-text" class="proof-add-label">Outcome (write statement)</label>
+            <input type="text" id="proof-outcome-text" class="input input-default" placeholder="e.g. A ≠ B, C ∈ line AB, E = line AB ∩ line CD, Let M be midpoint of AB" aria-label="Outcome" />
+          </div>
+          <div id="proof-point-names" class="proof-point-names" hidden>
+            <input type="text" id="proof-point-0" class="input input-default proof-point-input" placeholder="" aria-label="Point 1" />
+            <input type="text" id="proof-point-1" class="input input-default proof-point-input" placeholder="" aria-label="Point 2" />
+            <input type="text" id="proof-point-2" class="input input-default proof-point-input" placeholder="" aria-label="Point 3" />
+            <input type="text" id="proof-point-3" class="input input-default proof-point-input" placeholder="" aria-label="Point 4" />
+            <input type="text" id="proof-point-4" class="input input-default proof-point-input" placeholder="" aria-label="Point 5" />
+          </div>
+          <div id="proof-prereqs" class="proof-prereqs" hidden>
+            <span class="proof-add-label">Prerequisites</span>
+            <div id="proof-prereq-steps" class="proof-prereq-steps"></div>
+          </div>
+          <button type="button" id="btn-proof-add" class="button button-primary">Add step</button>
+        </div>
+        <p id="proof-step-message" class="proof-step-message" aria-live="polite"></p>
+      </section>
       <section id="label-panel" class="box card label-panel" aria-label="Object label" hidden>
         <h2 class="heading-small">Label</h2>
         <div class="label-panel-row">
-          <input type="text" id="object-label-input" class="input input-default" placeholder="e.g. A_1, B_3" maxlength="32" aria-label="Point name" />
+          <input type="text" id="object-label-input" class="input input-default" placeholder="Point name" maxlength="32" aria-label="Point name" />
           <button type="button" id="btn-label-done" class="button button-tertiary">Done</button>
         </div>
-        <p class="label-panel-hint">Use underscore for subscript: A_1 → A₁</p>
       </section>
     </aside>
     <div class="content-area">
