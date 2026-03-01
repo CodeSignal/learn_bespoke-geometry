@@ -35,7 +35,7 @@ const POINT_ON_LINE_TOLERANCE = 0.5;
 const LENGTH_TOLERANCE = 0.01;
 const POINT_MERGE_TOLERANCE = 0.01;
 
-/** Task: One line, 3 points on it, 2 points off it. */
+/** Task: One line, 3 points on it, 2 points off it. Line may be explicit (line tool) or from opposite rays + segments covering the gap. */
 export function validateLineWithPointsTask(
   snapshot: SnapshotEntry[],
   _options?: RunTaskOptions
@@ -44,7 +44,7 @@ export function validateLineWithPointsTask(
     return { valid: false, message: 'Invalid snapshot: expected an array.' };
   }
 
-  const lines = snapshot.filter((e) => e?.geom?.type === 'line');
+  const lines = getAllLinesFromSnapshot(snapshot);
   const points = snapshot.filter((e) => e?.geom?.type === 'point');
 
   if (lines.length === 0) {
@@ -60,7 +60,7 @@ export function validateLineWithPointsTask(
     };
   }
 
-  const line = lines[0].geom as GeomObject & { x1: number; y1: number; x2: number; y2: number };
+  const line = lines[0];
   const { x1, y1, x2, y2 } = line;
 
   let onLine = 0;
